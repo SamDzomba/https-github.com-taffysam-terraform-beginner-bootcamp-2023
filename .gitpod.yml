@@ -1,6 +1,8 @@
 tasks:
+
   - name: terraform
     before: |
+      cd $PROJECT_ROOT
       source ./bin/set_tf_alias
       source ./bin/install_terrafrom_cli
       source ./bin/generate_trfc_credentials
@@ -16,13 +18,21 @@ tasks:
       cd $THEIA_WORKSPACE_ROOT
 
   - name: sinatra
+
     before : |
       cd $PROJECT_ROOT
       cd terratowns_mock_server
       bundle install
       bundle exec ruby server.rb 
+
+    before: |
+       cd $PROJECT_ROOT
+       cd terratowns_mock_server
+       bundle install
+       bundle exec ruby server.rb
+
+
   - name: http-server
-    
     before: |
        npm install --global http-server
     command:
