@@ -111,12 +111,15 @@ class TerraTownsMockServer < Sinatra::Base
       halt 422, "Malformed JSON"
     end
 
+# assign the payload to variables    
+# this makes it easier to work with the code
     # Validate payload data
     name = payload["name"]
     description = payload["description"]
     domain_name = payload["domain_name"]
     content_version = payload["content_version"]
     town = payload["town"]
+# used for printing payload to variables 
 
     puts "name #{name}"
     puts "description #{description}"
@@ -124,19 +127,26 @@ class TerraTownsMockServer < Sinatra::Base
     puts "content_version #{content_version}"
     puts "town #{town}"
 
+
+# Creating a new Home model and set the attributes 
     home = Home.new
     home.town = town
     home.name = name
     home.description = description
     home.domain_name = domain_name
     home.content_version = content_version
-    
+
+  #generating a uuid at random.
+
     unless home.valid?
       error 422, home.errors.messages.to_json
     end
 
     uuid = SecureRandom.uuid
     puts "uuid #{uuid}"
+
+  # will mock save our data to our database
+  # which just a global variable
     $home = {
       uuid: uuid,
       name: name,
@@ -145,7 +155,7 @@ class TerraTownsMockServer < Sinatra::Base
       domain_name: domain_name,
       content_version: content_version
     }
-
+# WIll just return the uuid
     return { uuid: uuid }.to_json
   end
 
@@ -201,6 +211,8 @@ class TerraTownsMockServer < Sinatra::Base
     return { uuid: params[:uuid] }.to_json
   end
 
+  # Delete from our mock database
+  
   # DELETE
   delete '/api/u/:user_uuid/homes/:uuid' do
     ensure_correct_headings
